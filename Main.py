@@ -1,156 +1,97 @@
 import pygame
 
-#เรียกใช้ pygame
+# Initialize Pygame
 pygame.init()
 
-def check_collision(rect, pos):
-    return rect.collidepoint(pos)
+# Define colors (RGB)
+BLACK = (0, 0, 0)
+PURPLE = (153, 153, 255)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+BLUE = (51, 51, 255)
+GREEN = (0, 102, 102)
+GREEN1 = (153, 255, 153)
 
-#ตั้งค่าสี(RGB)
-BLACK = (0,0,0)
-PURPLE = (153,153,255)
-WHITE = (255,255,255)
-RED = (255,0,0)
-BLUE = (51,51,255)
-GREEN = (0,102,102)
-GREEN1 = (153,255,153)
-
-#ขนาดหน้าจอ
+# Screen dimensions
 SCREEN_W = 1250
 SCREEN_H = 720
-window_size = (1250, 720)
+window_size = (SCREEN_W, SCREEN_H)
 
-#หัวข้อเกม
+# Set up display
 window = pygame.display.set_mode(window_size)
 pygame.display.set_caption("Help me")
 
-#กำหนดตัวแปร
-screen = pygame.display.set_mode((SCREEN_W,SCREEN_H))
-screen.fill(GREEN1)#แล้วเอาตัวแปรมาเรียกใช้ในการตังค่าสี
+# Fill screen with color
+screen = pygame.display.set_mode((SCREEN_W, SCREEN_H))
+screen.fill(GREEN1)
 
-#ตั้งค่าฟอนต์    
-sys_font = pygame.font.SysFont("calibri",50)
-sys_font1 = pygame.font.SysFont("papyrus",70)
-custom_font = pygame.font.Font("Font/4AnnAroiUltraThin-Regular.ttf",20)
+# Set fonts
+sys_font = pygame.font.SysFont("calibri", 50)
+sys_font1 = pygame.font.SysFont("papyrus", 70)
+custom_font = pygame.font.Font("Font/4AnnAroiUltraThin-Regular.ttf", 20)
 
-#วาดรูปทรง
-W = 200
- 
-button_color = (PURPLE)
-button_hover_color = (WHITE)
-button_rect = pygame.Rect(50,200,200,50)
-button_font = pygame.font.SysFont("calibri", 50)
-button_text = button_font.render("start", True, BLUE)
-button_text_rect = button_text.get_rect(center=button_rect.center)
+# Button setup
+def create_button(rect, color, hover_color, text, font, text_color):
+    button = {
+        'rect': pygame.Rect(rect),
+        'color': color,
+        'hover_color': hover_color,
+        'text': font.render(text, True, text_color),
+        'text_rect': font.render(text, True, text_color).get_rect(center=(rect[0] + rect[2] // 2, rect[1] + rect[3] // 2))
+    }
+    return button
 
-button_color1 = (PURPLE)
-button_hover_color1 = (WHITE)
-button_rect1 = pygame.Rect(50,350,200,50)
-button_font1 = pygame.font.SysFont("calibri", 50)
-button_text1 = button_font1.render("advice", True, BLUE)
-button_text_rect1 = button_text1.get_rect(center=button_rect1.center)
+buttons = [
+    create_button((50, 200, 200, 50), PURPLE, WHITE, "start", pygame.font.SysFont("calibri", 50), BLUE),
+    create_button((50, 350, 200, 50), PURPLE, WHITE, "advice", pygame.font.SysFont("calibri", 50), BLUE),
+    create_button((50, 500, 200, 50), PURPLE, WHITE, "out", pygame.font.SysFont("calibri", 50), BLUE)
+]
 
-button_color2 = (PURPLE)
-button_hover_color2 = (WHITE)
-button_rect2 = pygame.Rect(50,500,200,50)
-button_font2 = pygame.font.SysFont("calibri", 50)
-button_text2 = button_font2.render("out", True, BLUE)
-button_text_rect2 = button_text2.get_rect(center=button_rect2.center)
+# Display text setup
+section_text = sys_font1.render("Game to exercise weak wrist muscles", False, GREEN)
+title_text = custom_font.render("คะแนนหนูตกอ่ะพี่ปันนน ฮือออ", True, BLACK)
 
-#ดึงฟอนต์
-fonts = pygame.font.get_fonts()
-for font in fonts:#แสดงชื่อฟอนต์ทีละตัว
-    print(font)
-
-#ตั้งค่าข้อความ
-section_text = sys_font1.render("Game to exercise weak wrist muscles",False,GREEN)       
-title_text = custom_font.render("คะแนนหนูตกอ่ะพี่ปันนน ฮือออ",True,BLACK)    
-
-#โหลดภาพ
+# Load and transform image
 CAT = pygame.image.load("Image/cat.jpg")
+CAT = pygame.transform.scale(CAT, (27, 30))
 
-#ปรับขนาดภาพ
-CAT = pygame.transform.scale(CAT,(27,30))
-
-# ฟังก์ชันสำหรับหน้าจอเกม
-def game_screen():
-    # โค้ดสำหรับหน้าจอเกมของคุณ
-    running = True
-    while running:
-        # ... (โค้ดสำหรับการอัปเดตและแสดงผลหน้าจอเกม)
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-
-# Initialize Pygame clock
+# Pygame clock initialization
 clock = pygame.time.Clock()
 
-#ถ้าเป็น Ture = วนลูป
+# Main loop
 running = True
-# Limit the frame rate to 60 FPS เมื่อเริ่มใช้คำสั่งวนลูปในกิจกรรมเกม
 while running:
     clock.tick(60)
-
-    # Handle events
-    for event in pygame.event.get():#ถ้ามี event ใน pygame ให้ตรวจสอบ event 
-        if event.type == pygame.QUIT:#ถ้า type ของ event เป็นการปิดหน้าจอ
-            running = False #ถ้าเป็น False = หยุดวนลูป
-
     mouse_pos = pygame.mouse.get_pos()
-    mouse_pos1 = pygame.mouse.get_pos()
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            for idx, button in enumerate(buttons):
+                if button['rect'].collidepoint(mouse_pos):
+                    print(f"Button {idx + 1} clicked!")
     
- 
-# Handle mouse events
-    if event.type == pygame.MOUSEBUTTONDOWN or event.type == pygame.MOUSEMOTION:
-        mouse_pos = pygame.mouse.get_pos()
+    for button in buttons:
+        if button['rect'].collidepoint(mouse_pos):
+            button['color'] = button['hover_color']
+        else:
+            button['color'] = PURPLE
 
-    if button_rect.collidepoint(mouse_pos):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print("Button 1 clicked!")
-    if event.type == pygame.MOUSEMOTION:
-         mouse_pos = pygame.mouse.get_pos()
-         if button_rect.collidepoint(mouse_pos):
-            button_color = button_hover_color
-         else:
-            button_color = (PURPLE)
+    window.fill(GREEN1)
+    for button in buttons:
+        pygame.draw.rect(window, button['color'], button['rect'])
+        window.blit(button['text'], button['text_rect'])
 
-    if button_rect1.collidepoint(mouse_pos):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print("Button 2 clicked!")
-    if event.type == pygame.MOUSEMOTION:
-         mouse_pos = pygame.mouse.get_pos()
-         if button_rect1.collidepoint(mouse_pos):
-            button_color1 = button_hover_color
-         else:
-            button_color1 = (PURPLE)        
-
-    if button_rect2.collidepoint(mouse_pos):
-        if event.type == pygame.MOUSEBUTTONDOWN:
-            print("Button 3 clicked!")
-    if event.type == pygame.MOUSEMOTION:
-         mouse_pos = pygame.mouse.get_pos()
-         if button_rect2.collidepoint(mouse_pos):
-            button_color2 = button_hover_color
-         else:
-            button_color2 = (PURPLE)              
-
-    window.fill((153,255,153))      
-    pygame.draw.rect(window, button_color, button_rect)
-    pygame.draw.rect(window, button_color1, button_rect1)
-    pygame.draw.rect(window, button_color2, button_rect2)
-    window.blit(button_text, button_text_rect)
-    window.blit(button_text1, button_text_rect1)
-    window.blit(button_text2, button_text_rect2)
     current_time = pygame.time.get_ticks()
-    clock_text = button_font.render(f"Time: {current_time/1000:.2f} s", True, (255, 255, 255))
+    clock_text = sys_font.render(f"Time: {current_time / 1000:.2f} s", True, WHITE)
     clock_text_rect = clock_text.get_rect(topright=(780, 10))
     window.blit(clock_text, clock_text_rect)
-    
-    
 
-    screen.blit(section_text,(40,50))#เอาข้อความเข้าไปแปะใน screen        
-    screen.blit(title_text,(20,655))#เอาข้อความเข้าไปแปะใน screen      
-    screen.blit(CAT,(289,655))#เอาข้อความเข้าไปแปะใน screen      
-    
+    screen.blit(section_text, (40, 50))
+    screen.blit(title_text, (20, 655))
+    screen.blit(CAT, (289, 655))
+
     pygame.display.flip()
-pygame.quit()#ปิดหน้าจอเกม
+
+pygame.quit()
